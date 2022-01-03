@@ -1,0 +1,372 @@
+SECTION I.Introduction
+In this paper, we start with the challenging question, whether there is room for the development of extractive summarization methods? Or, did they become obsolete and need to be replaced by more modern abstractive summarization methods? In addition, the question that naturally arises is: what maximum quality of a summary can we achieve with extractive summarization methods?
+
+Automatic text summarization (ATS) is a process of extracting the essential information from a text. The research in this area started in 1958 [1] and new numerous papers and methods are appearing every year since 2003 [2] when the large data sets for the purpose and essential computing equipment became available.
+
+A. Summarization Types - Problems Classification
+Let us define first the Extractive, Abstractive and some other summarization types that exist in the literature. Generally, we can classify them as presented in Figure 1 [3]–[4][5].
+
+FIGURE 1. - Text summarization methods classification [3]–[5].
+FIGURE 1.
+Text summarization methods classification [3]–[4][5].
+
+Show All
+
+Meaning of boxes in Figure 1 are:
+
+Input
+
+Single-document: summarization of one single document as a whole.
+
+Multi-document: summarization using a series of documents related to a common subject, but co-occurring. It can be used in the literature review process of scientific work to receive concise information on a subject, reducing redundancy.
+
+Output
+
+Extractive: summary uses the exact sentences from the source text without paraphrasing or combining them. This type of summary resembles bullet points to anchor for the main in-formation and often lacks transitive phrases and sentences for smoothing the text.
+
+Abstractive: summarizes by the own words of a person who read the article. The method is more complex than Extractive and involves sentence templates or advanced Natural Language Generation (NLG) models.
+
+Content
+
+Informative summary captures all the main information from the source text such that there is no need to read it after reading the summary.
+
+Indicative summary is a kind of teaser motivating a person to read the whole article if it seems relevant to the current information query.
+
+Critical summary contains an external opinion on the content of the Informative summary, which is not derived directly from the source text.
+
+Purpose
+
+Generic summaries have no focus on the special needs of any particular group of users and suit the wide public on average.
+
+User-focused summaries are customized for fulfilling the needs of a specified group or an individual user.
+
+One thing must be clear for now: Extractive Summarization methods “extract” sentences or other pieces of text (ex. words, summarizing texts in the form of keywords) to make summaries and do not makeup even a single word. Thus, all we need to make Extractive Summarization is already present in the text we want to summarize.
+
+B. Defining Text Summarization as Optimization Problem
+The natural question is, how can we tell if our summary is good or not? There are many different approaches for solving ATS; many define it as an optimization one. In this paper, we use ROUGE-1 and ROUGE-2 scores: which define the extent to which unigrams and bigrams in the intersection between the candidate and reference summaries meet within them; see Section III-B4. Furthermore, we need the ground truth summary to compare with the produced summary to evaluate the performance using ROUGE.
+
+Therefore, to define the optimization problem, we have to find a set of sentences within each text that will yield the highest possible ROUGE metric. However, doing this with the Brute Force algorithm could take us forever, and because of that, we need a more intelligent method.
+
+We use the Variable Neighborhood Search (VNS) [6], [7] method, which employs the heuristic search techniques to arrive at a possible result for a relatively short time. More details about VNS are in the Section III-B1.
+
+Alternatively, for the same task, we used a greedy algorithm. It is about taking text sentences containing a maximum number of words from the abstract. More details about the method in Section IV-A2. The greedy approach gave us an idea to develop a summarizer based on the same ideas. We also experimented with a VNS initialized by the Greedy solution.
+
+C. Extractive Summarization Revisited
+We present an Extractive Summarization approach1 which utilizes straightforward and old techniques but still performs on the level of the state-of-the-art models, which use complex neural network architectures and vast amounts of data for training; see Figure 2 for picture abstract of our approach. The arXiv dataset extract [8] of 17 thousand articles that we used in our experiments can be accessed at https://data.mendeley.com/datasets/nvsxfcbzdk/1. Some of the other advantages of the proposed approach include:
+
+Computational simplicity.
+
+No Machine Learning model training is required, but statistical inference is used.
+
+The summaries generated by the algorithm are rich in salient information from the text.
+
+FIGURE 2. - Greedy summarizer.
+FIGURE 2.
+Greedy summarizer.
+
+Show All
+
+The contribution of our research to the scientific knowledge is in following: 1) discovery of the top-line for the Extractive Summarization techniques (VNS, Greedy) and found that VNS initialized by the Greedy algorithm performs even better than any of the algorithms on their own for the task, 2) proposing of an Extractive Summarization method based on a greedy algorithm that is performing on a high level despite its relative simplicity, 3) cleaned dataset with different types of high-ROUGE summaries and useful text statistics. Aside from this, we raise several important questions for further research and as ideas for other researchers to think about, which can be found in Section VI.
+
+In Section II, we give a short review of the current condition in the text summarization research area. Further, Section III describes the data we used for our experiments and the methodology. In Section V, we present the results obtained, followed by Section VI where we discuss issues and thoughts we found during our research, and Section VII comes with the conclusion and sets out prospects for future work.
+
+SECTION II.Related Work
+On optimization techniques for finding out, there is a potential for Extractive Summarization to develop. Further, we used the method introduced by N. Mladenović [9] the Variable Neighborhood Search (VNS) algorithm as a local search heuristic for solving the minimum sum of squares problem in the clustering algorithms. Put merely, VNS takes the initial solution of a problem and iteratively changes the volume of change when no improvement to finding the objective function optima occurs and fixing the best result.
+
+The area of research in Text Summarization attracts the steady attention of scientists worldwide. Therefore, it is interesting that publications have skyrocketed from 1995 to 2015. A possible explanation for this is publications of papers on Machine Learning and Neural Model methods firstly applied to summarization by Kupiec in 1995 and Rush in 2015 accordingly. The highest number of reported publications was 6 608 in 2019.
+
+Many research papers saw the light since the first one on the text summarization subject was published by Luhn in 1958 [1], developing from the purely statistical to more recent machine learning (ML) [10] and contemporary Deep Learning methods [11]–[12][13].
+
+Proposed in 2004, a stochastic graph-based Extractive Summarization method that computes relative importance of textual units similar to the famous PageRank [14] algorithm used early by Google in ranking web pages. The sentence importance in the LexRank is computed based on eigenvector centrality in sentences graph representation. In addition, an inter-sentence cosine similarity measure was used as the adjacency matrix.
+
+The SumBasic [15] method, reported in 2005, exploits frequency exclusively to create summaries. It confirms that frequency alone is a powerful feature in summary creation, which is very similar to what our method profoundly depends on the minimum document frequency parameter (described in Section IV-B1). The SumBasic approach also demonstrates the ability to incorporate context adjustment and duplication removal in multi-document summarization.
+
+The contemporary Abstractive Summarization methods started appearing in the last ten years. The methods employ complex neural network architectures: sequence-to-sequence, RNNs with discourse awareness, and Transformers.
+
+Attentional Encoder-Decoder Recurrent Neural Networks (Attn-Seq2Seq) model abstractive text summarization [16]. The method addresses modeling keywords, sentence-to-word structure hierarchy capturing, and rare words emitting unseen during training. Even though sequence-to-sequence models have provided a new viable approach for Abstractive Text Summarization, they have two significant drawbacks: 1) failing to reproduce factual details accurately and 2) bringing in redundancy to the summaries [17]. Therefore a method (Pntr-Gen-Seq2Seq) augmenting the standard sequence-to-sequence attention model was suggested. The method addresses the factual accuracy problem using a hybrid pointer-generator network that copies words from the source text via pointing, preserving the ability of novel words produced through the generator. In addition, redundancy is eliminated by using coverage to track what information is included in the summary.
+
+The Discourse-Aware Attention model for long documents Abstractive Summarization (Discourse-att) was proposed by Cohan [18], consisting of hierarchical encoder modeling the document discourse structure and an attentive discourse-aware decoder generating the summary itself. As a result of this work, two datasets with a large number of scientific documents were produced, which we use in current research; see Section III-A.
+
+PEGASUS model [11] appeared at the end of 2019 using the method of pre-training large Transformer-based encoder-decoder models on massive text corpora (C4 and HugeNews) with a new self-supervised objective. In the model, meaningful sentences are masked from an input document and are generated together as one output sequence from the rest of the sentences, similarly to an Extractive Summarization.
+
+Regarding the evaluation of generated summary, ROUGE score (Recall-Oriented Understudy for Gisting Evaluation) [19] is widely used. It was first proposed at the Document Understanding Conference (DUC) in 2004. The basic idea of the metric is based on counting the number of verbal and/or phrase matches, also known as n-grams, between the generated graded summary and the excellent human-made gold standard. Although there are many ways to measure the similarity between reference and candidate summaries, the ROUGE metric remains the standard in-text summarization task.
+
+SECTION III.Methods and Data
+A. Data
+The arXive dataset, firstly introduced along with the PubMed dataset in 2018 [18], contains 215K arXiv.org repository scientific articles in English from the domains of physics, math, and other quantitative fields. PubMed contains 119K articles from the medicine domain. The articles in the dataset contain abstracts, article texts, a list of sections, and article texts divided by sections.
+
+We process the data to clean out articles with erroneous abstracts longer than the text and too long and too short article texts and leave only articles with an abstract length of 10 to 20 sentences to develop a dataset of 17 038 articles. The resulting datasets description is shown in Table 1.
+
+TABLE 1 Cleaned Datasets Description
+Table 1- 
+Cleaned Datasets Description
+B. Methods
+1) Variable Neighborhood Search (VNS)
+VNS is a framework for building heuristics (meta-heuristic), which exploits the idea of systematical initial solution neighborhood change to find optimums of the objective function to select from [20].
+
+VNS exploits the following observation facts [20] systematically:
+
+A local minimum concerning one neighborhood structure is not necessarily for another.
+
+A global minimum is a local minimum for all possible neighborhood structures.
+
+For many problems, local minima to one or several neighborhoods are relatively close to each other.
+
+2) Term Frequency-Inverse Document Frequency (TFIDF) Vectorization and Bag of Words Representation of Texts
+TFIDF is a numerical statistic reflecting how important a word is to a document in a collection or corpus [21]. The TFIDF value is directly proportional to the number of times a word appears in the document [22] and is adjusted by the number of documents in a collection or dataset that contain the word (the inverse document frequency (IDF ) component). This aids to account for the fact that general lexicon words have high frequencies in almost any document, so we can separate them from really document-specific essential words.
+
+The term frequency tf or the frequency of term t is calculated in (1).
+tf(t,d)=ft,d∑t´∈dft´,d,(1)
+View SourceRight-click on figure for MathML and additional features.where ft,d is the raw count of term t in document d , and t´ are all other terms within document.
+
+The inverse document frequency (IDF) measures how informative the word is and how common or rare it is among other documents. It is the logarithmically scaled inverse fraction of the documents that contain the word given in (2).
+IDF(t,D)=logN∣{d∈D:t∈d}∣+1,(2)
+View SourceRight-click on figure for MathML and additional features.where N is the total number of documents in the corpus N=∣D∣ , and ∣{d∈D:t∈d}∣ is the number of documents containing term t , and 1 is added to the denominator to avoid division by zero if the term is absent in the corpus.
+
+The TFIDF is calculated using the multiplication of results of (1) and (2); see (3).
+TFIDF(t,d,D)=tf(t,d)×IDF(t,D)(3)
+View SourceRight-click on figure for MathML and additional features.
+
+3) Sample Size Determination
+The method aims to choose the number of observations to use in the data sample. There is a high probability that obtained sample fairly represents the population data, and inferences made on the sample can be generalized to the entire population. The Sample Size (SS) calculation is given in (4) [23].
+SS=Z2∗(p)∗(1−p)c2,(4)
+View SourceRight-click on figure for MathML and additional features.where, Z is the Z-score (for example 1.96 for the 95% confidence probability or precision), p is the probability with which any item from the population can be selected (0.5 by default), c is the confidence interval in decimal form.
+
+Thus we calculate the sample size and perform Random Sampling with the dataset. Finally, to make sure our sample is representative, we compare the feature distributions of the dataset with those of the sample we obtain.
+
+a: Sample Quality Assessment
+The methods to check if a sample represents its source fairly:
+
+Pearson correlation coefficient: shows how the two series of numbers relate to each other. Hence, correlate or relate to each other, but it does not tell us anything about causation. The correlation coefficient is given in (5) [24].
+Correl(X,Y)=∑(x−x¯)(y−y¯)∑(x−x¯)2∑(y−y¯)−−−−−−−−−−−−−−−−−√,(5)
+View SourceRight-click on figure for MathML and additional features.where, x¯ and y¯ are the mean values of x an y. The higher the correlation coefficient the stronger is the relationship between two number series. As a rule of a thumb strong correlation is anything higher than 0.70. We use the correlation coefficient to tell if the statistical properties such as mean, standart deviation, minima and maxima, and the quartiles of the sample and population correlate or not.
+
+Kolmogorov-Smirnov test (KS test): the two-sample KS test shows if the two samples follow the same distribution or not and it is given in (6).
+Dn,m=supx∣F1,n(x)−F2,m(x)∣,(6)
+View SourceRight-click on figure for MathML and additional features.where F1,n and F2,m are the empirical distribution functions, and n and m are the sizes of the first and the second sample respectively, and sup is the supremum function (shortly, a number form a set which is greater than or equal to any number of a sets subset, if such a number exists [25]). Kolmogorov-Smirnov test realization in scipy [26] Python module returns the statistics and p-value, and of the p-value is greater than 0.05, then we are unable to reject the null hypothesis (H0 ) and have to assume that the two samples we tested follow the same probability distribution.
+
+4) Recall-Oriented Understudy for Gisting Evaluation (ROUGE)
+To evaluate the summaries, Recall-Oriented Understudy for Gisting Evaluation (ROUGE) scoring is used [19]. The basic idea of the metric is based on calculating the share of intersection n-grams between candidate summary and reference summary, in reference (recall; see (7) and candidate (precision; see (8) summaries. The integration of recall and precision is calculated as the harmonic mean between two and is called the F1 score; see (9).
+recall=len(C∩R)len(R),(7)
+View SourceRight-click on figure for MathML and additional features.where C and R are the set of unique n_grams in candidate and reference summaries respectively, and len() means number of elements in a set.
+precision=F1 score=len(C∩R)len(C).2×precision×recallprecision+recall.(8)(9)
+View SourceRight-click on figure for MathML and additional features.
+
+SECTION IV.Experiments
+A. Attaining Best Achievable ROUGE Score
+In our previous article [27] we approached the task of finding the best possible ROUGE-1 score using only VNS heuristics. However, this time for comparison, we also used a greedy algorithm and added the ROUGE-2 score.
+
+1) VNS
+Using the original article abstracts in our dataset as a reference, try to assemble, with the VNS technique’s help, the best summary in terms of ROUGE-1 metric from article sentences.
+
+Applying VNS here is logically derived from the fact that finding the best possible summary out of the text sentences by running through all possible combinations is impractical due to the O(n!) time complexity of this approach, given in (10).
+(NtNa)=Nt!Na!(Nt−Na)!(10)
+View SourceRight-click on figure for MathML and additional features.where Na and Nt - are the number of sentences in summary and text, respectively. While VNS gives a rather simpler alternative, which can provide a satisfactory solution for a reasonable amount of time.
+
+In our case (Figure 3), using VNS terminology:
+
+Initial solution - is the first, usually random approximation of the objective function. We initialize our search for a solution by a random set of sentences x in Nk=(NtNa) space of possible neighborhood structures.
+
+Shaking - is the process of systematical modification of the initial solution to the extent specified by the kmax parameter.
+
+Incumbent solution - is the best current solution achieved after shaking.
+
+Stop condition - the cycle is limited by 5000 iterations or 60 seconds. Suppose no ROUGE-1 score improvement occurs after 700 consecutive iterations, the cycle breaks.
+
+FIGURE 3. - General VNS algorithm pseudo code.
+FIGURE 3.
+General VNS algorithm pseudo code.
+
+Show All
+
+For each of 17 038 articles of our dataset(arXive dataset extract, Table 1), we performed the following steps in a cycle:
+
+Initial solution - Calculating the ROUGE-1 [19] score for an initially randomly selected sentences from the original document.
+
+Shaking - Make changes starting from replacing one randomly selected sentence with a new one from the text up to kmax sentence replacement if no ROUGE-1 score improvement occurs. The maximum amount of the changes is kmax parameter.
+
+Incumbent solution - Recalculate ROUGE-1 score and fix the result if it is better than the initial score and reset the k to one sentence, or if no improvement happens, gradually increase the k up to kmax .
+
+2) Greedy Algorithm
+Given an Article full text (T ) separated into Sentences (S ), and its Abstract (A ):
+
+Obtain a unique word list from A as a Vocabulary (V ).
+
+Build matrix M , where for each sentence in T as rows, we determine the presence of the words from V in binary mode.
+
+Until M is empty:
+
+Sum the M along 0 axis (or rows) and obtain the maximum value index, the sentence index containing a maximum of words from the A . Save the index to an Index List (IL ).
+
+Update the M by deleting the columns corresponding to non-zero values for the sentence with the maximum number of words from A .
+
+To get the number of sentences in summary resulting in the maximum ROUGE score:
+
+Calculate ROUGE scores for all combinations of sentences starting from 1 up to a length of IL.
+
+Select the number of sentences with the maximum ROUGE score.
+
+Update IL with the best sentence combination.
+
+Sort indices in IL in the ascending order and recover the original order of the sentences in the article.
+
+Collect summary by taking sentences from T by the indices in sorted I .
+
+Compute ROUGE score between generated summary and A .
+
+3) Voting
+We also show how Voting could improve the results if we select the best out of VNS and Greedy.
+
+B. Summarization Method
+In [27] we experimented with using a supervised method to build a binary classification model for sentences, which is something similar to what was suggested by Kupiec in 1995 [10], as we got labels using the VNS method. However, this time e also got labels produced by the Greedy algorithm and failed to build a good classification model.
+
+For the vectorization methods we tried to use the Fasttext [28], BERT [29], Electra [30] and Elmo [31]. We also tried to supplement the obtained vectors with different custom features like the order number of the sentence from the beginning. The end features like the number of nouns, verbs, and adjectives in a sentence, cosine distance of a sentence from two adjacent sentences, the mutual information of a sentence with its neighboring ones from the left and the right. Moreover, nothing helped us achieve anything more than 0.71 in accuracy score for the balanced dataset.
+
+Therefore, we decided to explore the approach derived from the Greedy method when we tried to learn the best possible ROUGE score using the Extractive summarization techniques. However, this time we do not want to look at the provided article abstract A and modify the algorithm as follows:
+
+Given an Article full text (T) separated into Sentences (S):
+
+TfIdfVectorize T in with min_df = 0.042 (found empirically) returning matrix (M ). We use here TfidfVectorizer [32], because this time we have to account for the importance of the words in the text.
+
+Until Mx is empty:
+
+Sum the M along 0 axis (or rows) and obtain the maximum value index, the sentence index containing a maximum of TFIDF value words from the T . Save the index to an Index List (IL ).
+
+Update the M by deleting the columns corresponding to non-zero values for the sentence with the maximum sum of TFIDF value words from T.
+
+We take the top 8 sentence indices from the IL with the maximum sum of TFIDF value words from T. On average, the Greedy gets approximately eight sentences (or 7.7 sentences to be more precise) to achieve the maximum ROUGE score.
+
+Sort indices in IL in the ascending order to recover the original sequence order of the sentences in the article.
+
+Collect summary by taking sentences from T by the indices in sorted IL .
+
+Compute ROUGE score between generated summary and A .
+
+1) Optimizing the min_df and max_df Parameters in TfidfVectorizer
+Another problem we have to solve is optimizing for the min_df and max_df parameters in TfidfVectorizer as we do not see the article abstract beforehand for summarization purposes and have to account not only for the word importance but also filter out infrequent words.
+
+To solve this problem, we get a representative sample from the dataset of 17 038 articles left after the data cleaning of the original arXive dataset. Then, for each article, get the summary using the Summarization method described in Section IV-B and the ROUGE-1 value using the article abstract in the range of 0.001 to 1.0 for both min_df and max_df to get the averages as the optimal parameter values.
+
+The calculation of representative sample size is given in (4).
+
+SECTION V.Results
+A. The Highest Achievable ROUGE Scores
+Applying the VNS and Greedy techniques described above, we have a ROUGE-1 metric of 0.55 for both techniques and ROUGE-2 of 0.21 and 0.23, respectively. Whereas the best contemporary methods employing sophisticated neural network architectures [11]–[12][13] can achieve ROUGE-1 of just 0~.45 and ROUGE-2 of 17.27 on arXive dataset; see Table 2. So there is room for improvement for the summarization methods and techniques.
+
+TABLE 2 Results for Calculating the Best Achievable ROUGE Scores (R-1 and R-2) Using Extractive Methods of Summarization
+Table 2- 
+Results for Calculating the Best Achievable ROUGE Scores (R-1 and R-2) Using Extractive Methods of Summarization
+The voting technique produced even better results of 0.57 and 0.24 for ROUGE-1 and ROUGE-2 metrics, respectively; see Table 2. It is also worth noting that 51% of labels come from VNS and 49% from Greedy results. Therefore both methods yield comparable results. Nevertheless, labels produced by the methods correlate for a mere 0.12 Pearson correlation coefficient. This fact can mean that despite the similar results, the two methods select very different sentences, so the solutions to the summary sentence selection problem are numerous. As for the time efficiency took VNS almost 11 hours to process the 17 038 articles from the dataset using 27 cores, while Greedy completed the same task in one hour using the same computational resources. For a visual representation of VNS, Greedy best achievable ROUGE scores results and Voting among them see Figure 4.
+
+FIGURE 4. - The best achievable ROUGE scores on 17038 arXive dataset articles.
+FIGURE 4.
+The best achievable ROUGE scores on 17038 arXive dataset articles.
+
+Show All
+
+Lastly, we ran VNS initialized by the Greedy algorithm solution and achieved a new record of 0.58 and 0.25 for ROUGE-1 and ROUGE-2, respectively; see Table 2.
+
+Interestingly, the best summaries generated by the four methods: VNS, Greedy, Voting, and VNS initialized by Greedy, have a different number of sentences on average 15, 7, 11, and 10. We explain the seven sentences in Greedy summaries, which is smaller than the number of sentences selected for the best ROUGE score by other approaches. The algorithm intentionally chooses the most lexically rich sentences longer than average and thus maximizes the ROUGE score with fewer sentences. In contrast, VNS tries random combinations of sentences not accounting for their properties. However, VNS initialized by the Greedy algorithm and the Voting method yield summaries with 10 and 11 sentences, respectively, close to those of golden summaries (11 sentences per summary). Moreover, it is also challenging to determine the optimal number of sentences to collect for a summary.
+
+B. Greedy Extractive Summarization Results
+To make the Greedy Summarization algorithm work, we need to gather statistics on the texts we want to work with to extract summaries. Some statistics can be collected quickly and easily (ex., text lengths), but others require tedious tests and trial routines requiring computational resources and time (ex. searching for the optimal values of minimum document frequency parameter for vectorizer). Therefore we decided to collect the stats not on the entire dataset but its representative sample.
+
+1) Sampling
+a: Calculating the Sample Size and Random Sampling
+Using (4), we get the sample size of 376 articles from the dataset of 17 038 articles. After random sampling, we check if the sampling represents the population; population here means the dataset from which the sample was taken.
+
+b: Assessing the Sample Quality
+Visualization: To check for the quality of our sample we firstly look at the graphical representations of distributions of text lengths and abstract lengths in sentences for both the population and sample; see Figure 5 and Figure 6.
+
+FIGURE 5. - Relative frequency distributions of population and sample text lengths. The dark green color indicates the intersection between the population and the sample.
+FIGURE 5.
+Relative frequency distributions of population and sample text lengths. The dark green color indicates the intersection between the population and the sample.
+
+Show All
+
+FIGURE 6. - Relative frequency distributions of population and sample abstract lengths. The dark green color indicates the intersection between the population and the sample.
+FIGURE 6.
+Relative frequency distributions of population and sample abstract lengths. The dark green color indicates the intersection between the population and the sample.
+
+Show All
+
+Visually, the population and the sample seem to fit in a good way. Moreover, now we look for the actual figures in Table 3 which gives us such statistical properties as mean, standard deviation, minima and maxima, and quartile values.
+
+TABLE 3 Text and Abstract Length in Sentences Statistical Properties for the Sample and Population
+Table 3- 
+Text and Abstract Length in Sentences Statistical Properties for the Sample and Population
+Statistical properties difference: The differences between statistical properties of population and sample, such as the abstract length feature, seems to be negligible. Also for the text length feature, the figures are not very big (not exceeding 3% difference); see Table 3.
+
+Correlation: The fact that len_text and len_ abstract columns of sample and population correlate with the coefficients of 0.99965 and 0.99999 respectively, adds up well to the assumption of good quality of the sample.
+
+Kolmogorov-Smirnov test: We performed the two-sample Kolmogorov-Smirnov test on the sample and its source on the texts and abstracts lengths features. The p-values returned for texts and abstract lengths are 0.33 and 0.98, respectively. Therefore, as the p-values are way too more significant than the 0.05, we fail to reject the null hypothesis (H0 ) that both samples follow the same probability distribution.
+
+Hence, the sample reasonably represents the source data and can derive statistical inferences to the entire population.
+
+2) Minimum and Maximum Document Frequency Optimal Parameters
+We ran a Brute Force algorithm on the data sample that proved to be of high quality at representing the data source to find optimal values of minimum document frequency and maximum document frequency parameters of TfidfVectorizer for each of 376 datapoints; see Figure 7.
+
+FIGURE 7. - ROUGE-1 score as a function of minimum and maximum document frequency parameters.
+FIGURE 7.
+ROUGE-1 score as a function of minimum and maximum document frequency parameters.
+
+Show All
+
+As we can see on the Figure 7a (arXive dataset), changing maximum document frequency parameter (max_df) effect on the ROUGE-1 is very low, and starting from the value of 0.12 effect disappears. On the contrary, the minimum document frequency parameter (min_df) affects the ROUGE-1 substantially, making it the maximum of 0.44 with the parameter value of 0.042 and a steady ROUGE-1 score decrease to zero as the parameter value approaches 1.0. We interpret it as min_df parameter value of 0.042 (with variation of 0.022) allows for the most significant words to vocabulary for TfidfVectorizer filtering out too rare words.
+
+We observe similar situation on the Figure 7b (PubMed dataset), where the maximum ROUGE-1 value of 0.40 is achieved with the optimal minimum document frequency parameter (min_df) of 0.076.
+
+3) Greedy Extractive Summarization Quality
+We tested our Greedy summarization approach on both arXive and PubMed datasets, 17038 articles each, and achieved on average 0.43/0.12 and 0.40/0.13 respectively for ROUGE-1/ROUGE-2 scores; see Table 4.
+
+TABLE 4 Greedy Summarization Approach Results Statistics for arXive and PubMed Datasets
+Table 4- 
+Greedy Summarization Approach Results Statistics for arXive and PubMed Datasets
+The ROUGE score results distributions shown in Figure 8 and Figure 9 are dense, and allow to assume that the approach is working steadily as expected. For examples of the summaries produced by Greedy Summarizer on arXive dataset please visit the link.2
+
+FIGURE 8. - Greedy summarization approach ROUGE-1 score distribution.
+FIGURE 8.
+Greedy summarization approach ROUGE-1 score distribution.
+
+Show All
+
+FIGURE 9. - Greedy summarization approach ROUGE-2 score distribution.
+FIGURE 9.
+Greedy summarization approach ROUGE-2 score distribution.
+
+Show All
+
+The comparison of the Greedy Extractive Summarization approach in Table 5 shows that it outperforms all but PEGASUSLARGE which was trained on the C4 corpus [36] containing more than 1000M documents, and our method used just 376 documents for training. Thus, the proposed approach confidently surpasses all of the well-known Extractive Summarization models by a significant margin of approximately 1/4. As for the contemporary Transformer PEGASUS model, we can say that we achieved the same level of performance.
+
+TABLE 5 Comparison of the Proposed Approach With the Contemporary Leader Text Summarization Models. Numbers in Bold Indicate Maximum Column Values by Class
+Table 5- 
+Comparison of the Proposed Approach With the Contemporary Leader Text Summarization Models. Numbers in Bold Indicate Maximum Column Values by Class
+SECTION VI.Discussion
+This paper proposed a Greedy optimization method for the Extractive Summarization of scientific articles. Unfortunately, despite performing well among the state-of-the-art models taking second place after the PEGASUS model in summarizing articles in arXive and PubMed datasets, we faced several issues worth discussing.
+
+An essential factor in Extractive Summarization for maximizing the ROUGE score is finding the optimal number of sentences to be taken from the original text. However, so far, we have seen no clear correlation between the optimal number of sentences given by VNS, Greedy algorithm, Voting, and VNS initialized by Greedy, and any other factor such as text length in characters, words and sentences, and other features. The summary length importance has been studied by Steinberger and Ježek [35], but they imply by the LSA evaluation that the longer the summary, the better. Their article was published the same year ROUGE score [19] was introduced, which is now the expected standard for summary evaluation, and more extended summaries increase the recall while decaying precision. On the Other hand, ROUGE scoring assumes that the reference summary is ground truth and escapes the need to check the reference summary itself concerning the article text. At the same time, it might be a teaser-style indicative summary. So further research and discussion are needed on the optimal number of sentences for the rouge.
+
+The idea of using word frequencies for text summarization is more than 60 years old, firstly addressed by Luhn [1] and revisited by Nenkova in 2005 [15] with her SumBasic method. Furthermore, now we revisit the issue from the different angles of optimizing the minimum document frequency parameter (min_df) to maximize the ROUGE score. Luhn suggests that the best words for the summary lie in between the most frequent words (cut-off C) and most rare words (cut-off D); see Figure 10. However, our findings show (Figure 7) that cutting off only the rarest words makes sense for the ROUGE score maximization. Moreover, the question is how to determine the optimal min_df parameter for each article instead of using an average value. The question was attempted to be answered by the Transition Point (TP) technique [37] in 2006. TP technique weighs the terms with regards to their distance to the midpoint terms (the point somewhere between C and D on the Figure 10), which carry the salient information.
+
+FIGURE 10. - Idea of words with maximum resolving power, or words carrying the most valuable information (E), location in between the highest (C) and lowest frequency words (D).
+FIGURE 10.
+Idea of words with maximum resolving power, or words carrying the most valuable information (E), location in between the highest (C) and lowest frequency words (D).
+
+Show All
+
+Talking about the results achieved by the model proposed in this work (Table 5), we suggest that Extractive Summarization Methods should be revisited. Because the upper bound in Extractive Summarization has not been achieved yet, we also think that the top-line we discovered in our work with the help of VNS and Greedy algorithms is not final but just a first approximation.
+
+SECTION VII.Conclusion
+This work showed two methods to determine the best possible ROUGE score for Extractive Summarization on the arXive dataset. The first one involved the VNS technique and was used in our previous publication [27], and the second approach employed a greedy algorithm. Both approaches showed similar performance, but the Greedy approach takes significantly less time to complete. The study showed that there is still room to develop Extractive Summarization methods as the best possible ROUGE-1 score is on average 0.55 while state-of-the-art models do not surpass a 0.50 level.
+
+The use of the Greedy approach induced us to use a modified algorithm for Extractive Summarization, and it showed results comparable to those of state-of-the-art models in our tests. Thus, generally, we can say that Extractive Methods of Summarization still have the potential for development, supporting the opinion of Sebastian Ruder when he says that the significant role is played not by the complexity of the method but by proper hyper-parameter tuning and data preprocessing [38].
+
+For future work, we plan to research on:
+
+Determination of the optimal number of sentences yielding the highest ROUGE score for each case.
+
+Continue research on optimizing the min_df parameter to determine it on the go for each article to perform better instead of using statistically induced averages.
+
+Develop a method to enhance the Greedy algorithm in search mode to escape local minima greedy algorithms are prone to fall in.
+
+Use a stochastic algorithm instead of Brute Force to search for optimal min_df.
