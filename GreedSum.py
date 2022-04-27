@@ -54,21 +54,21 @@ def main():
         OUTPUT_FILENAME = args.output_fname
         print("Output file name was provided:", OUTPUT_FILENAME)
         
-    MIN_DF = 1 #the default min_df   
+    MIN_DF = 1.0 #the default min_df   
     if not args.min_df:
         print("No minimum document frequency parameter was provided, using the default", MIN_DF)
     else:
         MIN_DF = float(args.min_df)
         print("Minimum document frequency parameter was provided:", MIN_DF)
         
-    MAX_DF = 1 #the default max_df   
+    MAX_DF = 1.0 #the default max_df   
     if not args.max_df:
         print("No maximum document frequency parameter was provided, using the default", MAX_DF)
     else:
         MAX_DF = float(args.max_df)
         print("Maximum document frequency parameter was provided:", MAX_DF)
         
-    NUM_SENT = 1 #the default max_df   
+    NUM_SENT = 10 #the default max_df   
     if not args.num_sent:
         print("No number of sentences was provided, using the default", NUM_SENT)
     else:
@@ -77,16 +77,22 @@ def main():
         
         
     # 1. Get the text from the file provided
-    f = open(INPUT_FILENAME, 'r')
-    text = ' '.join(f.readlines()).replace('\n',' ').replace('  ',' ').split('. ')
+    #f = open(INPUT_FILENAME, 'r', encoding='cp1251')
+    with open(INPUT_FILENAME, "r", encoding="UTF-8") as f:
+        text = ' '.join([l.strip() for l in f.readlines()]).replace('\n',' ').replace('  ',' ').split('. ')
     f.close()
     
     # 2. Summarize
     summary = greed_sum(text, NUM_SENT, min_df=MIN_DF, max_df=MAX_DF)
 
     # 3. Save summary to a file
-    f = open(OUTPUT_FILENAME, 'w')
-    f.writelines(summary)
+    f = open(OUTPUT_FILENAME, 'w', encoding="UTF-8")
+    #f.writelines(summary)
+    for s in summary:
+        print(s)
+        print()
+        f.write(s+'\n')
+  
     f.close()
     
 if __name__ == "__main__":
