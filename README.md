@@ -20,6 +20,9 @@ OR
   pages={168141-168153},
   doi={10.1109/ACCESS.2021.3136302}}
 
+# Live Demo
+Live demo web-app is available at http://isa1.pythonanywhere.com/greedsum.
+
 # Instructions
 Run GreedSum.py with the following parameters:
 
